@@ -1,5 +1,5 @@
 global _start
-extern printf, scanf=[
+extern printf, scanf
 
 section .data
 	message db "Input Max Fn: ", 0x0a
