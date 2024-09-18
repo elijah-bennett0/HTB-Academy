@@ -1,7 +1,10 @@
 global _start
-
 extern printf
 
+section .data
+	format db "%u", 0x0a, 0x00
+
+section .text
 _start:
 
 	call pushValues
@@ -37,6 +40,7 @@ pushValues:
 	push rax
 	mov rax, 0x69751244059aa2a3
 	push rax
+	ret
 
 decrypt:
 
@@ -45,10 +49,17 @@ decrypt:
 	xor r8, r8
 	pop r8
 	xor r8, rbx
-	
-	cmp r8, 0xa284ee5c7cde4bd7
+
+	mov rdi, format
+	mov rsi, r8
+	call printf
+	mov r9, 0xa284ee5c7cde4bd7
+	cmp r8, r9
 	jz exit
+	ret
 
 exit:
 
-	
+	mov rax, 60
+	mov rdi, 0
+	syscall
