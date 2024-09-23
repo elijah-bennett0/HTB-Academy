@@ -1,14 +1,10 @@
 global _start
 extern printf
 
-section .data
-	format db "%u", 0x0a, 0x00
-
 section .text
 _start:
 
 	call pushValues
-	call decrypt
 
 pushValues:
 
@@ -40,6 +36,9 @@ pushValues:
 	push rax
 	mov rax, 0x69751244059aa2a3
 	push rax
+
+	call decrypt
+
 	ret
 
 decrypt:
@@ -48,15 +47,20 @@ decrypt:
 
 	xor r8, r8
 	pop r8
+	mov r9, r8
 	xor r8, rbx
 
-	mov rdi, format
+	; write(int fd, const void buf[.count], size_t count)
+	mov rax, 1
+	mov rdi, 1
 	mov rsi, r8
-	call printf
-	mov r9, 0xa284ee5c7cde4bd7
-	cmp r8, r9
+	mov rdx, 9
+	syscall
+
+	mov r10, 0xa284ee5c7cde4bd7
+	cmp r9, r10
 	jz exit
-	ret
+	loop decrypt
 
 exit:
 
